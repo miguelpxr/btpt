@@ -1,0 +1,199 @@
+$pink:        #ff2d78;
+$pink-soft:   #ff6fa8;
+$pink-light:  #ffb3d1;
+$purple:      #c44bff;
+$purple-soft: #e0a0ff;
+$dark:        #08010f;
+$border:      rgba(255, 45, 120, 0.35);
+$border-soft: rgba(196, 75, 255, 0.25);
+$text:        #fce4ff;
+$text-dim:    rgba(252, 228, 255, 0.45);
+
+// ─── Página ───────────────────────────────────────────────────────────────────
+.game-page {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: $dark;
+  overflow: hidden;
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+}
+
+// ─── Fondo ────────────────────────────────────────────────
+.bg-grid {
+  position: absolute; inset: -50%; width: 200%; height: 200%;
+  background-image:
+    linear-gradient(rgba(255,45,120,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,45,120,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: grid-drift 25s linear infinite;
+  pointer-events: none;
+}
+@keyframes grid-drift {
+  0%   { transform: perspective(600px) rotateX(15deg) translateY(0); }
+  100% { transform: perspective(600px) rotateX(15deg) translateY(80px); }
+}
+
+.bg-glow {
+  position: absolute; border-radius: 50%;
+  filter: blur(120px); pointer-events: none;
+  animation: glow-pulse 6s ease-in-out infinite alternate;
+}
+.bg-glow--pink {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(255,45,120,0.15) 0%, transparent 70%);
+  top: -100px; right: -80px;
+}
+.bg-glow--purple {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(196,75,255,0.12) 0%, transparent 70%);
+  bottom: -100px; left: -80px;
+  animation-delay: 3s;
+}
+@keyframes glow-pulse {
+  0%   { opacity: 0.6; transform: scale(1); }
+  100% { opacity: 1;   transform: scale(1.15); }
+}
+
+.scanline {
+  position: absolute; inset: 0; pointer-events: none; z-index: 1;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 2px,
+    rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px
+  );
+}
+
+// ─── HUD Header ──────────────────────────────────────────────────────────────
+.hud {
+  position: relative; z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 0.65rem 1.5rem;
+  border-bottom: 1px solid $border;
+  background: rgba(8, 1, 15, 0.9);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 2px 24px rgba($pink, 0.1);
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.hud__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.hud__tank-icon {
+  width: 28px; height: 28px;
+  color: $pink;
+  filter: drop-shadow(0 0 8px $pink);
+  animation: icon-pulse 3s ease-in-out infinite;
+}
+@keyframes icon-pulse {
+  0%,100% { filter: drop-shadow(0 0 5px $pink); }
+  50%     { filter: drop-shadow(0 0 14px $pink) drop-shadow(0 0 24px $purple); }
+}
+
+.hud__title {
+  font-family: 'Orbitron', 'Courier New', monospace;
+  font-size: 0.95rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+.title-battle { color: $pink !important;   text-shadow: 0 0 12px $pink; }
+.title-tanks  { color: $purple-soft !important; text-shadow: 0 0 12px $purple; }
+
+// ─── Stats ────────────────────────────────────────────────────────────────────
+.hud__stats {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.stat-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.75rem;
+  background: rgba($pink, 0.05);
+  border: 1px solid $border-soft;
+  clip-path: polygon(5px 0, 100% 0, calc(100% - 5px) 100%, 0 100%);
+
+  &--hp { gap: 0.5rem; }
+}
+
+.stat-label {
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: $text-dim !important;
+}
+
+.stat-value {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: $text !important;
+
+  &--name   { color: $pink-light !important; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  &--score  { color: #ffd166 !important; text-shadow: 0 0 8px rgba(255, 209, 102, 0.4); }
+  &--danger { color: $pink !important; text-shadow: 0 0 8px rgba($pink, 0.5); animation: blink 0.8s step-end infinite; }
+}
+
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+// HP bar
+.hp-bar {
+  width: 80px;
+  height: 6px;
+  background: rgba($pink, 0.15);
+  border: 1px solid rgba($pink, 0.2);
+  overflow: hidden;
+}
+.hp-fill {
+  height: 100%;
+  background: linear-gradient(to right, $pink, $purple);
+  box-shadow: 0 0 6px $pink;
+  transition: width 0.3s ease;
+}
+
+// Ammo dots
+.ammo-dots {
+  display: flex;
+  gap: 2px;
+}
+.ammo-dot {
+  width: 7px; height: 7px;
+  background: $pink;
+  box-shadow: 0 0 4px $pink;
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  transition: background 0.2s, box-shadow 0.2s;
+
+  &--empty {
+    background: rgba($pink, 0.15);
+    box-shadow: none;
+  }
+}
+
+
+// ─── Main área de juego ───────────────────────────────────────────────────────
+.game-main {
+  position: relative; z-index: 2;
+  flex: 1 1 auto;
+  display: flex;
+  overflow: hidden;
+  padding: 1rem 1.5rem 1rem;
+}
+
+// app-game-canvas ocupa todo el espacio disponible
+app-game-canvas {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  min-width: 0;
+}

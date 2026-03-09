@@ -1,0 +1,116 @@
+<div class="game-layout">
+
+  <div class="canvas-panel">
+    <div class="canvas-frame">
+      <div class="canvas-corner canvas-corner--tl"></div>
+      <div class="canvas-corner canvas-corner--tr"></div>
+      <div class="canvas-corner canvas-corner--bl"></div>
+      <div class="canvas-corner canvas-corner--br"></div>
+
+      <canvas #canvas></canvas>
+
+      <!-- Overlay "DESTROYED" -->
+      <div class="destroyed-overlay" *ngIf="tank.state === 'destroyed'">
+        <span class="destroyed-text">DESTRUIDO</span>
+      </div>
+    </div>
+
+    <p class="controls-hint">
+      <span class="hint-key">WASD</span> mover &nbsp;·&nbsp;
+      <span class="hint-key">ESPACIO</span> disparar &nbsp;·&nbsp;
+    </p>
+  </div>
+
+  <aside class="side-panel">
+
+    <!-- Botones MQTT debug -->
+    <section class="side-section">
+      <div class="section-label">
+        <span class="label-bracket">[</span> EVENTOS MQTT <span class="label-bracket">]</span>
+      </div>
+      <div class="mqtt-btns">
+        <button class="cyber-btn cyber-btn--mqtt" (click)="triggerPowerUp()">
+          <span class="btn-icon">⚡</span>
+          <span>POWER-UP <small>QoS 1</small></span>
+        </button>
+        <button class="cyber-btn cyber-btn--mqtt cyber-btn--collision" (click)="triggerCollision()">
+          <span class="btn-icon">💥</span>
+          <span>COLISIÓN <small>QoS 2</small></span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Latencia benchmark -->
+    <section class="side-section" *ngIf="latencyStats">
+      <div class="section-label">
+        <span class="label-bracket">[</span> LATENCIA MQTT <span class="label-bracket">]</span>
+      </div>
+      <div class="latency-grid">
+        <div class="lat-item">
+          <span class="lat-label">muestras</span>
+          <span class="lat-value">{{ latencyStats.n }}</span>
+        </div>
+        <div class="lat-item">
+          <span class="lat-label">avg</span>
+          <span class="lat-value">{{ latencyStats.avg | number:'1.0-0' }}<small>ms</small></span>
+        </div>
+        <div class="lat-item">
+          <span class="lat-label">p50</span>
+          <span class="lat-value">{{ latencyStats.p50 }}<small>ms</small></span>
+        </div>
+        <div class="lat-item">
+          <span class="lat-label">p95</span>
+          <span class="lat-value lat-value--warn">{{ latencyStats.p95 }}<small>ms</small></span>
+        </div>
+        <div class="lat-item">
+          <span class="lat-label">min</span>
+          <span class="lat-value lat-value--good">{{ latencyStats.min }}<small>ms</small></span>
+        </div>
+        <div class="lat-item">
+          <span class="lat-label">max</span>
+          <span class="lat-value lat-value--bad">{{ latencyStats.max }}<small>ms</small></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="side-section" *ngIf="!latencyStats">
+      <div class="section-label">
+        <span class="label-bracket">[</span> LATENCIA MQTT <span class="label-bracket">]</span>
+      </div>
+      <p class="empty-hint">Activa un Power-Up para ver métricas</p>
+    </section>
+
+    <!-- Chat SignalR -->
+    <section class="side-section side-section--chat">
+      <div class="section-label">
+        <span class="label-bracket">[</span> CHAT SIGNALR <span class="label-bracket">]</span>
+        <span class="chat-dot"></span>
+      </div>
+
+      <div class="chat-messages" #chatBox>
+        <div class="chat-empty" *ngIf="chatSnapshot.length === 0">
+          sin mensajes aún...
+        </div>
+        <div class="chat-msg" *ngFor="let m of chatSnapshot">
+          <span class="chat-name">{{ m.playerName }}</span>
+          <span class="chat-sep">›</span>
+          <span class="chat-text">{{ m.message }}</span>
+        </div>
+      </div>
+
+      <div class="chat-input-row">
+        <input
+          class="chat-input"
+          [(ngModel)]="chatText"
+          placeholder="escribe y presiona Enter..."
+          (keydown.enter)="sendChat()"
+          maxlength="120"
+        />
+        <button class="chat-send-btn" (click)="sendChat()" [disabled]="!chatText.trim()">
+          <span>›</span>
+        </button>
+      </div>
+    </section>
+
+  </aside>
+</div>

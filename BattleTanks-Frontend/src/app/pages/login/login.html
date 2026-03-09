@@ -1,0 +1,120 @@
+<div class="login-wrapper">
+  <div class="bg-grid"></div>
+  <div class="bg-glow bg-glow--pink"></div>
+  <div class="bg-glow bg-glow--purple"></div>
+  <div class="scanline"></div>
+
+  <div class="particles">
+    <span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span>
+  </div>
+
+  <div class="login-card">
+
+    <div class="card-header">
+      <div class="tank-icon">
+        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="20" width="32" height="16" rx="3" fill="currentColor" opacity="0.9"/>
+          <rect x="14" y="14" width="20" height="10" rx="2" fill="currentColor"/>
+          <rect x="22" y="8" width="4" height="10" rx="1" fill="currentColor"/>
+          <circle cx="14" cy="36" r="5" fill="currentColor" opacity="0.7"/>
+          <circle cx="24" cy="36" r="5" fill="currentColor" opacity="0.7"/>
+          <circle cx="34" cy="36" r="5" fill="currentColor" opacity="0.7"/>
+        </svg>
+      </div>
+      <h1 class="game-title">
+        <span class="title-battle">BATTLE</span>
+        <span class="title-tanks">TANKS</span>
+      </h1>
+      <p class="subtitle">MULTIPLAYER</p>
+      <div class="title-line"></div>
+    </div>
+
+    <form (ngSubmit)="login()" class="login-form">
+      <div class="field-group">
+        <label class="field-label">
+          <span class="label-bracket">[</span> EMAIL <span class="label-bracket">]</span>
+        </label>
+        <div class="input-wrapper">
+          <span class="input-icon">▸</span>
+          <input type="email" [(ngModel)]="email" name="email" required
+            placeholder="player@arena.net" class="cyber-input" autocomplete="email"/>
+          <div class="input-glow"></div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">
+          <span class="label-bracket">[</span> PASSWORD <span class="label-bracket">]</span>
+        </label>
+        <div class="input-wrapper">
+          <span class="input-icon">▸</span>
+          <input type="password" [(ngModel)]="password" name="password" required
+            placeholder="••••••••" class="cyber-input" autocomplete="current-password"/>
+          <div class="input-glow"></div>
+        </div>
+      </div>
+
+      <button type="submit" class="cyber-btn">
+        <span class="btn-text">INICIAR SESIÓN</span>
+        <span class="btn-glitch" aria-hidden="true">INICIAR SESIÓN</span>
+        <div class="btn-shine"></div>
+      </button>
+    </form>
+
+    <div *ngIf="success" class="status-msg status-msg--success">
+      <span class="status-icon">✓</span> ACCESO CONCEDIDO
+    </div>
+    <div *ngIf="error" class="status-msg status-msg--error">
+      <span class="status-icon">✕</span> {{ error }}
+    </div>
+
+    <!-- Carrusel de personajes -->
+    <div class="characters-section">
+      <div class="characters-label">
+        <span class="label-bracket">[</span> ELIGE TU BANDO <span class="label-bracket">]</span>
+      </div>
+      <div class="carousel-track-wrapper">
+        <div class="carousel-track">
+          <div class="character-card" [class.character-card--active]="activeChar === 0" (click)="activeChar = 0">
+            <img src="assets/tanks/tank-panda-removebg-preview.png" alt="Panda Tank" />
+            <span class="char-name">PANDA</span>
+          </div>
+          <div class="character-card" [class.character-card--active]="activeChar === 1" (click)="activeChar = 1">
+            <img src="assets/tanks/tank-black-removebg-preview.png" alt="Black Tank" />
+
+            <span class="char-name">SHADOW</span>
+          </div>
+          <div class="character-card" [class.character-card--active]="activeChar === 2" (click)="activeChar = 2">
+            <img src="assets/tanks/tank-shark-removebg-preview.png" alt="Shark Tank" />
+
+            <span class="char-name">SHARK</span>
+          </div>
+          <div class="character-card" [class.character-card--active]="activeChar === 3" (click)="activeChar = 3">
+            <img src="assets/tanks/tank-robot.jpeg" alt="Robot Tank" />
+
+            <span class="char-name">RANGER</span>
+          </div>
+          <div class="character-card" [class.character-card--active]="activeChar === 4" (click)="activeChar = 4">
+            <img src="assets/tanks/tank-trio.jpeg" alt="Trio Tank" />
+
+            <span class="char-name">SQUAD</span>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-dots">
+        <span *ngFor="let d of [0,1,2,3,4]"
+          class="dot" [class.dot--active]="activeChar === d"
+          (click)="activeChar = d">
+        </span>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <span class="footer-line"></span>
+      <span class="footer-text">v2.0.7 · SEC_PROTOCOL_ACTIVE</span>
+      <span class="footer-line"></span>
+    </div>
+
+  </div>
+</div>

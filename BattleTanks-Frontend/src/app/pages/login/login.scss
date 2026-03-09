@@ -1,0 +1,327 @@
+$pink:        #ff99c5;
+$pink-soft:   #ffb3d4;
+$pink-light:  #ffd6e8;
+$purple:      #c44bff;
+$purple-soft: #e0a0ff;
+$dark:        #08010f;
+$dark-card:   rgba(20, 5, 40, 0.97);
+$border:      rgba(255, 153, 197, 0.45);
+$text:        #fce4ff;
+$text-dim:    rgba(252, 228, 255, 0.45);
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.login-wrapper {
+  position: fixed; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: $dark; overflow: hidden;
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+}
+
+.bg-grid {
+  position: absolute; inset: -50%; width: 200%; height: 200%;
+  background-image:
+    linear-gradient(rgba(255,153,197,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,153,197,0.06) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: grid-drift 20s linear infinite;
+  pointer-events: none;
+}
+@keyframes grid-drift {
+  0%   { transform: perspective(600px) rotateX(20deg) translateY(0); }
+  100% { transform: perspective(600px) rotateX(20deg) translateY(80px); }
+}
+
+.bg-glow {
+  position: absolute; border-radius: 50%;
+  filter: blur(100px); pointer-events: none;
+  animation: glow-pulse 5s ease-in-out infinite alternate;
+}
+.bg-glow--pink {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(255,153,197,0.22) 0%, transparent 70%);
+  top: -100px; right: -80px;
+}
+.bg-glow--purple {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(196,75,255,0.18) 0%, transparent 70%);
+  bottom: -100px; left: -80px;
+  animation-delay: 2.5s;
+}
+@keyframes glow-pulse {
+  0%   { opacity: 0.7; transform: scale(1); }
+  100% { opacity: 1;   transform: scale(1.2); }
+}
+
+.scanline {
+  position: absolute; inset: 0; pointer-events: none; z-index: 1;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 2px,
+    rgba(0,0,0,0.05) 2px, rgba(0,0,0,0.05) 4px
+  );
+}
+
+.particles {
+  position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+}
+.particles span {
+  position: absolute; display: block; border-radius: 50%;
+  width: 3px; height: 3px;
+  background: $pink; box-shadow: 0 0 8px $pink;
+  animation: float-up linear infinite;
+}
+.particles span:nth-child(1){left:8%;animation-duration:8s;animation-delay:0s;width:2px;height:2px;background:$purple;box-shadow:0 0 6px $purple}
+.particles span:nth-child(2){left:22%;animation-duration:12s;animation-delay:2s}
+.particles span:nth-child(3){left:38%;animation-duration:9s;animation-delay:4s;background:$purple;box-shadow:0 0 8px $purple}
+.particles span:nth-child(4){left:54%;animation-duration:14s;animation-delay:1s;width:2px;height:2px}
+.particles span:nth-child(5){left:67%;animation-duration:10s;animation-delay:5s;background:$purple;box-shadow:0 0 8px $purple}
+.particles span:nth-child(6){left:78%;animation-duration:7s;animation-delay:3s;width:4px;height:4px}
+.particles span:nth-child(7){left:89%;animation-duration:11s;animation-delay:0.5s;background:$purple}
+.particles span:nth-child(8){left:4%;animation-duration:13s;animation-delay:7s;width:2px;height:2px}
+@keyframes float-up {
+  0%{bottom:-10px;opacity:0} 10%{opacity:1} 90%{opacity:0.8} 100%{bottom:110%;opacity:0}
+}
+
+// ─── Card ─────────────────────────────────────────────────
+.login-card {
+  position: relative; z-index: 2;
+  width: 100%; max-width: 460px; margin: 1rem;
+  padding: 2rem 2rem 1.5rem;
+  background: $dark-card;
+  border: 1px solid $border;
+  backdrop-filter: blur(20px);
+  clip-path: polygon(0 0,calc(100% - 20px) 0,100% 20px,100% 100%,20px 100%,0 calc(100% - 20px));
+  box-shadow:
+    0 0 0 1px rgba(255,153,197,0.12),
+    0 0 60px rgba(255,153,197,0.18),
+    0 0 100px rgba(196,75,255,0.08),
+    inset 0 0 60px rgba(255,153,197,0.02);
+  animation: card-in 0.6s cubic-bezier(0.16,1,0.3,1) both;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute; top: 0; right: 0;
+    width: 20px; height: 1px;
+    background: $pink; box-shadow: 0 0 10px $pink;
+  }
+  &::after {
+    content: '';
+    position: absolute; top: 15%; left: 0;
+    width: 2px; height: 70%;
+    background: linear-gradient(to bottom, transparent, $pink, $purple, transparent);
+    box-shadow: 0 0 12px $pink;
+  }
+}
+@keyframes card-in {
+  from { opacity:0;transform:translateY(24px) scale(0.96); }
+  to   { opacity:1;transform:translateY(0) scale(1); }
+}
+
+// ─── Header ───────────────────────────────────────────────
+.card-header { text-align: center; margin-bottom: 1.5rem; }
+
+.tank-icon {
+  width: 46px; height: 46px; margin: 0 auto 0.6rem;
+  color: $pink; filter: drop-shadow(0 0 12px $pink);
+  animation: icon-pulse 3s ease-in-out infinite;
+}
+@keyframes icon-pulse {
+  0%,100%{filter:drop-shadow(0 0 8px $pink)}
+  50%{filter:drop-shadow(0 0 20px $pink) drop-shadow(0 0 36px $purple)}
+}
+
+.game-title {
+  display: flex; justify-content: center; gap: 0.5rem;
+  font-family: 'Orbitron','Courier New',monospace;
+  font-size: 1.8rem; font-weight: 900; line-height: 1;
+  letter-spacing: 0.08em; margin-bottom: 0.2rem;
+}
+.title-battle { color: $pink !important; text-shadow: 0 0 20px $pink, 0 0 40px rgba(255,153,197,0.4); }
+.title-tanks  { color: $purple-soft !important; text-shadow: 0 0 20px $purple, 0 0 40px rgba(196,75,255,0.4); }
+
+.subtitle {
+  font-size: 0.62rem; letter-spacing: 0.5em;
+  color: $text-dim !important; margin-bottom: 0.9rem;
+}
+.title-line {
+  width: 80px; height: 1px; margin: 0 auto;
+  background: linear-gradient(to right, transparent, $pink, $purple, transparent);
+  box-shadow: 0 0 10px $pink;
+}
+
+// ─── Form ─────────────────────────────────────────────────
+.login-form { display: flex; flex-direction: column; gap: 1.1rem; }
+.field-group { display: flex; flex-direction: column; gap: 0.35rem; }
+.field-label { font-size: 0.68rem; letter-spacing: 0.2em; color: $pink-light !important; }
+.label-bracket { color: $pink !important; opacity: 0.8; }
+
+.input-wrapper { position: relative; display: flex; align-items: center; }
+.input-icon {
+  position: absolute; left: 10px; z-index: 1; pointer-events: none;
+  color: $pink !important; font-size: 0.75rem;
+  animation: blink 1.5s step-end infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+.cyber-input {
+  width: 100%; padding: 0.7rem 0.75rem 0.7rem 2rem;
+  background: rgba(255,153,197,0.05);
+  border: 1px solid rgba(255,153,197,0.25);
+  color: $text !important;
+  font-family: 'Share Tech Mono','Courier New',monospace;
+  font-size: 0.88rem; outline: none; color-scheme: dark;
+  clip-path: polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,0 100%);
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+
+  &::placeholder { color: $text-dim !important; }
+  &:focus {
+    border-color: $pink; background: rgba(255,153,197,0.07);
+    box-shadow: 0 0 0 1px rgba(255,153,197,0.2), 0 0 20px rgba(255,153,197,0.12);
+    & ~ .input-glow { opacity: 1; }
+  }
+}
+.input-glow {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(to right, transparent, $pink, $purple, transparent);
+  opacity: 0; transition: opacity 0.3s; box-shadow: 0 0 8px $pink;
+}
+
+.cyber-btn {
+  position: relative; margin-top: 0.4rem; padding: 0.88rem;
+  background: linear-gradient(135deg, rgba(255,153,197,0.18), rgba(196,75,255,0.15));
+  border: 1px solid $pink; color: $pink !important;
+  font-family: 'Orbitron','Courier New',monospace;
+  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.2em;
+  cursor: pointer; overflow: hidden;
+  clip-path: polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%);
+  transition: color 0.2s, box-shadow 0.2s, border-color 0.2s;
+  box-shadow: 0 0 20px rgba(255,153,197,0.25);
+
+  .btn-text { position: relative; z-index: 1; }
+  .btn-glitch {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-family: 'Orbitron',monospace; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.2em;
+    color: $purple-soft; opacity: 0;
+    clip-path: polygon(0 30%,100% 30%,100% 60%,0 60%); transform: translateX(-3px);
+  }
+  .btn-shine {
+    position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+    background: linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);
+    transform: skewX(-20deg); transition: left 0.5s;
+  }
+  &:hover {
+    color: #fff !important; border-color: $purple-soft;
+    box-shadow: 0 0 30px rgba(255,153,197,0.5), 0 0 60px rgba(196,75,255,0.25);
+    .btn-glitch { animation: glitch 0.3s steps(2) infinite; opacity: 0.5; }
+    .btn-shine  { left: 150%; }
+  }
+  &:active { transform: scale(0.98); }
+}
+@keyframes glitch {
+  0%  {transform:translateX(-3px);clip-path:polygon(0 20%,100% 20%,100% 50%,0 50%)}
+  50% {transform:translateX(3px); clip-path:polygon(0 55%,100% 55%,100% 80%,0 80%)}
+  100%{transform:translateX(-1px);clip-path:polygon(0 35%,100% 35%,100% 65%,0 65%)}
+}
+
+.status-msg {
+  margin-top: 0.75rem; padding: 0.55rem 0.8rem;
+  font-size: 0.72rem; letter-spacing: 0.1em;
+  display: flex; align-items: center; gap: 0.45rem;
+  animation: status-in 0.3s ease both;
+  &--success { color: #4fffb0 !important; border-left: 2px solid #4fffb0; background: rgba(79,255,176,0.05); }
+  &--error   { color: $pink-light !important; border-left: 2px solid $pink; background: rgba(255,153,197,0.06); }
+}
+@keyframes status-in { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:translateX(0)} }
+
+// ─── Carrusel ─────────────────────────────────────────────
+.characters-section {
+  margin-top: 1.4rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid rgba(255,153,197,0.15);
+}
+
+.characters-label {
+  font-size: 0.65rem; letter-spacing: 0.2em;
+  color: $pink-light !important;
+  text-align: center; margin-bottom: 0.9rem;
+  .label-bracket { color: $pink !important; opacity: 0.7; }
+}
+
+.carousel-track-wrapper {
+  overflow: hidden; width: 100%;
+}
+
+.carousel-track {
+  display: flex; gap: 0.75rem;
+  justify-content: center; flex-wrap: nowrap;
+}
+
+.character-card {
+  flex-shrink: 0;
+  display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+  width: 76px; cursor: pointer;
+  padding: 0.5rem 0.3rem 0.4rem;
+  border: 1px solid rgba(255,153,197,0.15);
+  background: rgba(255,153,197,0.03);
+  clip-path: polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,0 100%);
+  transition: border-color 0.25s, background 0.25s, transform 0.25s, box-shadow 0.25s;
+
+  img {
+    width: 60px; height: 60px; object-fit: contain;
+    filter: saturate(0.7) brightness(0.9);
+    transition: filter 0.25s, transform 0.25s;
+  }
+
+  .char-name {
+    font-size: 0.55rem; letter-spacing: 0.15em;
+    color: $text-dim !important;
+    transition: color 0.25s;
+  }
+
+  &:hover {
+    border-color: rgba(255,153,197,0.35);
+    background: rgba(255,153,197,0.07);
+    transform: translateY(-3px);
+    img { filter: saturate(1) brightness(1.05); transform: scale(1.06); }
+    .char-name { color: $pink-light !important; }
+  }
+
+  &--active {
+    border-color: $pink;
+    background: rgba(255,153,197,0.1);
+    transform: translateY(-5px);
+    box-shadow: 0 0 16px rgba(255,153,197,0.3), 0 8px 20px rgba(0,0,0,0.3);
+
+    img { filter: saturate(1.1) brightness(1.1); transform: scale(1.08); }
+    .char-name { color: $pink !important; }
+  }
+}
+
+.carousel-dots {
+  display: flex; justify-content: center; gap: 6px; margin-top: 0.8rem;
+}
+.dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(255,153,197,0.2);
+  border: 1px solid rgba(255,153,197,0.3);
+  cursor: pointer; transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+
+  &--active {
+    background: $pink;
+    box-shadow: 0 0 8px $pink;
+    transform: scale(1.3);
+  }
+  &:hover { background: rgba(255,153,197,0.5); }
+}
+
+// ─── Footer ───────────────────────────────────────────────
+.card-footer {
+  display: flex; align-items: center; gap: 0.75rem; margin-top: 1.25rem;
+}
+.footer-line {
+  flex: 1; height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255,153,197,0.3));
+  &:last-child { background: linear-gradient(to left, transparent, rgba(255,153,197,0.3)); }
+}
+.footer-text { font-size: 0.58rem; letter-spacing: 0.1em; color: $text-dim !important; white-space: nowrap; }

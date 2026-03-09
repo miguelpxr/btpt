@@ -1,0 +1,408 @@
+$pink:        #ff2d78;
+$pink-soft:   #ff6fa8;
+$pink-light:  #ffb3d1;
+$purple:      #c44bff;
+$purple-soft: #e0a0ff;
+$dark:        #08010f;
+$dark-panel:  rgba(16, 3, 32, 0.95);
+$border:      rgba(255, 45, 120, 0.35);
+$border-soft: rgba(196, 75, 255, 0.25);
+$text:        #fce4ff;
+$text-dim:    rgba(252, 228, 255, 0.45);
+
+// ─── Layout principal ─────────────────────────────────────────────────────────
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.game-layout {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+  height: 100%;
+  padding: 0;
+}
+
+// ─── Panel izquierdo: canvas ──────────────────────────────────────────────────
+.canvas-panel {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+.canvas-frame {
+  position: relative;
+  display: inline-block;
+
+  // Esquinas decorativas cyber
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    width: 100%; height: 100%;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 2;
+  }
+}
+
+// Esquinas individuales
+.canvas-corner {
+  position: absolute;
+  width: 18px; height: 18px;
+  z-index: 3;
+  pointer-events: none;
+
+  &--tl {
+    top: -2px; left: -2px;
+    border-top: 2px solid $pink;
+    border-left: 2px solid $pink;
+    box-shadow: -2px -2px 8px rgba($pink, 0.5);
+  }
+  &--tr {
+    top: -2px; right: -2px;
+    border-top: 2px solid $pink;
+    border-right: 2px solid $pink;
+    box-shadow: 2px -2px 8px rgba($pink, 0.5);
+  }
+  &--bl {
+    bottom: -2px; left: -2px;
+    border-bottom: 2px solid $purple;
+    border-left: 2px solid $purple;
+    box-shadow: -2px 2px 8px rgba($purple, 0.5);
+  }
+  &--br {
+    bottom: -2px; right: -2px;
+    border-bottom: 2px solid $purple;
+    border-right: 2px solid $purple;
+    box-shadow: 2px 2px 8px rgba($purple, 0.5);
+  }
+}
+
+canvas {
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  border: 1px solid $border;
+  box-shadow:
+    0 0 30px rgba($pink, 0.15),
+    0 0 60px rgba($purple, 0.08),
+    inset 0 0 20px rgba(0, 0, 0, 0.6);
+}
+
+// Overlay destruido
+.destroyed-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(8, 1, 15, 0.7);
+  z-index: 10;
+  animation: overlay-in 0.4s ease both;
+}
+
+@keyframes overlay-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.destroyed-text {
+  font-family: 'Orbitron', 'Courier New', monospace;
+  font-size: 2.4rem;
+  font-weight: 900;
+  letter-spacing: 0.3em;
+  color: $pink !important;
+  text-shadow:
+    0 0 20px $pink,
+    0 0 50px rgba($pink, 0.5);
+  animation: glitch-text 0.8s steps(2) infinite;
+}
+
+@keyframes glitch-text {
+  0%   { clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%); transform: translateX(-4px); }
+  25%  { clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%); transform: translateX(4px); }
+  50%  { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); transform: translateX(0); }
+  100% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); transform: translateX(0); }
+}
+
+.controls-hint {
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  font-size: 0.68rem;
+  color: $text-dim !important;
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+
+.hint-key {
+  display: inline-block;
+  padding: 0.1rem 0.4rem;
+  border: 1px solid rgba($pink, 0.4);
+  color: $pink-light !important;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+}
+
+// ─── Panel derecho ────────────────────────────────────────────────────────────
+.side-panel {
+  flex: 0 0 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  height: 100%;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar { width: 3px; }
+  &::-webkit-scrollbar-thumb { background: rgba($pink, 0.3); }
+}
+
+.side-section {
+  background: $dark-panel;
+  border: 1px solid $border-soft;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  padding: 0.9rem 1rem;
+  animation: panel-in 0.4s ease both;
+
+  &--chat {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 220px;
+  }
+}
+
+@keyframes panel-in {
+  from { opacity: 0; transform: translateX(12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.section-label {
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: $pink-light !important;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+
+  .label-bracket { color: $pink !important; opacity: 0.7; }
+}
+
+// ─── Botones MQTT ─────────────────────────────────────────────────────────────
+.mqtt-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cyber-btn {
+  position: relative;
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: box-shadow 0.2s, border-color 0.2s, background 0.2s;
+
+  small { opacity: 0.6; font-size: 0.62rem; margin-left: auto; }
+
+  &--mqtt {
+    background: rgba($pink, 0.07);
+    border: 1px solid $border;
+    color: $pink-light !important;
+    clip-path: polygon(5px 0, 100% 0, calc(100% - 5px) 100%, 0 100%);
+
+    &:hover {
+      background: rgba($pink, 0.14);
+      border-color: $pink;
+      box-shadow: 0 0 16px rgba($pink, 0.3);
+    }
+  }
+
+  &--collision {
+    background: rgba($purple, 0.07);
+    border-color: $border-soft;
+    color: $purple-soft !important;
+
+    &:hover {
+      background: rgba($purple, 0.14);
+      border-color: $purple;
+      box-shadow: 0 0 16px rgba($purple, 0.3);
+    }
+  }
+}
+
+.btn-icon {
+  font-size: 0.9rem;
+}
+
+// ─── Latencia grid ────────────────────────────────────────────────────────────
+.latency-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.lat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  padding: 0.4rem 0.25rem;
+  background: rgba($pink, 0.04);
+  border: 1px solid rgba($pink, 0.15);
+}
+
+.lat-label {
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  color: $text-dim !important;
+  text-transform: uppercase;
+}
+
+.lat-value {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: $text !important;
+  line-height: 1;
+
+  small { font-size: 0.55rem; opacity: 0.6; }
+
+  &--good { color: #4fffb0 !important; }
+  &--warn { color: #ffd166 !important; }
+  &--bad  { color: $pink !important; }
+}
+
+.empty-hint {
+  font-size: 0.68rem;
+  color: $text-dim !important;
+  font-style: italic;
+  letter-spacing: 0.05em;
+}
+
+// ─── Chat ─────────────────────────────────────────────────────────────────────
+.chat-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #4fffb0;
+  box-shadow: 0 0 6px #4fffb0;
+  animation: dot-pulse 2s ease-in-out infinite;
+  margin-left: auto;
+}
+
+@keyframes dot-pulse {
+  0%,100% { opacity: 1; }
+  50%     { opacity: 0.3; }
+}
+
+.chat-messages {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.4rem 0;
+  margin-bottom: 0.6rem;
+  min-height: 120px;
+  max-height: 240px;
+
+  &::-webkit-scrollbar { width: 3px; }
+  &::-webkit-scrollbar-thumb { background: rgba($pink, 0.3); }
+}
+
+.chat-empty {
+  font-size: 0.65rem;
+  color: $text-dim !important;
+  font-style: italic;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.chat-msg {
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  font-size: 0.72rem;
+  display: flex;
+  gap: 0.35rem;
+  align-items: baseline;
+  animation: msg-in 0.2s ease both;
+}
+
+@keyframes msg-in {
+  from { opacity: 0; transform: translateX(-4px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.chat-name {
+  color: $pink !important;
+  font-weight: bold;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.chat-sep {
+  color: $purple !important;
+  flex-shrink: 0;
+}
+
+.chat-text {
+  color: $text !important;
+  word-break: break-word;
+}
+
+.chat-input-row {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 0.5rem 0.6rem;
+  background: rgba($pink, 0.05);
+  border: 1px solid rgba($pink, 0.25);
+  color: $text !important;
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  font-size: 0.75rem;
+  outline: none;
+  clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 0 100%);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  color-scheme: dark;
+
+  &::placeholder { color: $text-dim !important; }
+  &:focus {
+    border-color: $pink;
+    box-shadow: 0 0 0 1px rgba($pink, 0.2), 0 0 12px rgba($pink, 0.1);
+  }
+}
+
+.chat-send-btn {
+  width: 34px; height: 34px;
+  flex-shrink: 0;
+  background: rgba($pink, 0.12);
+  border: 1px solid $border;
+  color: $pink !important;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px);
+  transition: background 0.2s, box-shadow 0.2s;
+
+  &:hover:not(:disabled) {
+    background: rgba($pink, 0.25);
+    box-shadow: 0 0 12px rgba($pink, 0.4);
+  }
+  &:disabled { opacity: 0.3; cursor: not-allowed; }
+}
